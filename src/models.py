@@ -126,6 +126,55 @@ class PatchVideoDiscriminator(nn.Module):
         return h, None
 
 
+class FactorizedPatchVideoDiscriminator(nn.Module):
+    '''
+    this function is identical to PatchVideoDiscriminator with the exception that all
+    3D convolutions are factorized
+    for more details see:
+        https://arxiv.org/pdf/1912.08860.pdf
+    '''
+    def __init__(self, n_channels, n_output_neurons=1, bn_use_gamma=True, use_noise=False, noise_sigma=None, ndf=64):
+        super(PatchVideoDiscriminator, self).__init__()
+
+        self.n_channels = n_channels
+        self.n_output_neurons = n_output_neurons
+        self.use_noise = use_noise
+        self.bn_use_gamma = bn_use_gamma
+
+        self.main = nn.Sequential(
+            Noise(use_noise, sigma=noise_sigma),
+            nn.Conv3d(n_channels, ndf, (1, 4, 4), stride=(1, 2, 2), padding=(0, 1, 1), bias=False),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Conv3d(ndf, ndf, (4, 1, 1), stride=1, padding=(1, 0, 0), bias=False),
+            nn.LeakyReLU(0.2, inplace=True),
+
+            Noise(use_noise, sigma=noise_sigma),
+            nn.Conv3d(ndf, ndf * 2, (1, 4, 4), stride=(1, 2, 2), padding=(0, 1, 1), bias=False),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Conv3d(ndf * 2, ndf * 2, (4, 1, 1), stride=1, padding=(1, 0, 0), bias=False),
+            nn.BatchNorm3d(ndf * 2),
+            nn.LeakyReLU(0.2, inplace=True),
+
+            Noise(use_noise, sigma=noise_sigma),
+            nn.Conv3d(ndf * 2, ndf * 4, (1, 4, 4), stride=(1, 2, 2), padding=(0, 1, 1), bias=False),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Conv3d(ndf * 4, ndf * 4, (4, 1, 1), stride=1, padding=(1, 0, 0), bias=False),
+            nn.BatchNorm3d(ndf * 4),
+            nn.LeakyReLU(0.2, inplace=True),
+
+            nn.Conv3d(ndf * 4, ndf * 4, (1, 4, 4), stride=(1, 2, 2), padding=(0, 1, 1), bias=False),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Conv3d(ndf * 4, 1, (4, 1, 1), stride=1, padding=(1, 0, 0), bias=False),
+        )
+
+    def forward(self, input):
+        h = self.main(input).squeeze()
+
+        return h, None
+
+
+
+
 class VideoDiscriminator(nn.Module):
     def __init__(self, n_channels, n_output_neurons=1, bn_use_gamma=True, use_noise=False, noise_sigma=None, ndf=64):
         super(VideoDiscriminator, self).__init__()

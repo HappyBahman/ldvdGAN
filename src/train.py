@@ -57,6 +57,7 @@ from trainers import Trainer
 
 import data
 
+from utils import count_parameters
 
 def build_discriminator(type, **kwargs):
     discriminator_type = getattr(models, type)
@@ -116,6 +117,8 @@ if __name__ == "__main__":
     video_discriminator = build_discriminator(args['--video_discriminator'], dim_categorical=dim_z_category,
                                               n_channels=n_channels, use_noise=args['--use_noise'],
                                               noise_sigma=float(args['--noise_sigma']))
+
+    print('The number of parameters for Video disciminator is : {0}'.format(count_parameters(video_discriminator)))
 
     if torch.cuda.is_available():
         generator.cuda()
