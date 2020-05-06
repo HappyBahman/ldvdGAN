@@ -80,7 +80,7 @@ class Trainer(object):
     def compute_gan_loss(self, discriminator, sample_true, sample_fake, is_video):
         real_batch = sample_true()
 
-        batch_size = real_batch['images'].size(0)
+        batch_size = real_batch['images'].size(int(0))
         fake_batch, generated_categories = sample_fake(batch_size)
 
         real_labels, real_categorical = discriminator(Variable(real_batch['images']))

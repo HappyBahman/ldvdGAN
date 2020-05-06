@@ -14,7 +14,7 @@ def show_batch(batch):
     is_video_batch = len(normed.size()) > 4
 
     if is_video_batch:
-        rows = [vu.make_grid(b.permute(1, 0, 2, 3), nrow=b.size(1)).numpy() for b in normed]
+        rows = [vu.make_grid(b.permute(1, 0, 2, 3), nrow=b.size(int(1))).numpy() for b in normed]
         im = np.concatenate(rows, axis=1)
     else:
         im = vu.make_grid(normed).numpy()

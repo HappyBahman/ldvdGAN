@@ -223,7 +223,7 @@ class CategoricalVideoDiscriminator(VideoDiscriminator):
         self.dim_categorical = dim_categorical
 
     def split(self, input):
-        return input[:, :input.size(1) - self.dim_categorical], input[:, input.size(1) - self.dim_categorical:]
+        return input[:, :input.size(int(1)) - self.dim_categorical], input[:, input.size(int(1)) - self.dim_categorical:]
 
     def forward(self, input):
         h, _ = super(CategoricalVideoDiscriminator, self).forward(input)
@@ -322,8 +322,8 @@ class VideoGenerator(nn.Module):
 
         z, z_category_labels = self.sample_z_video(num_samples, video_len)
 
-        h = self.main(z.view(z.size(0), z.size(1), 1, 1))
-        h = h.view(h.size(0) / video_len, video_len, self.n_channels, h.size(3), h.size(3))
+        h = self.main(z.view(z.size(int(0)), z.size(int(1)), 1, 1))
+        h = h.view(h.size(int(0)) / video_len, video_len, self.n_channels, h.size(int(3)), h.size(int(3)))
 
         z_category_labels = torch.from_numpy(z_category_labels)
 
@@ -336,9 +336,9 @@ class VideoGenerator(nn.Module):
     def sample_images(self, num_samples):
         z, z_category_labels = self.sample_z_video(num_samples * self.video_length * 2)
 
-        j = np.sort(np.random.choice(z.size(0), num_samples, replace=False)).astype(np.int64)
+        j = np.sort(np.random.choice(z.size(int(0)), num_samples, replace=False)).astype(np.int64)
         z = z[j, ::]
-        z = z.view(z.size(0), z.size(1), 1, 1)
+        z = z.view(z.size(int(0)), z.size(int(1)), 1, 1)
         h = self.main(z)
 
         return h, None
