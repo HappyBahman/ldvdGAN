@@ -20,7 +20,7 @@ class VideoFolderDataset(torch.utils.data.Dataset):
         self.images = []
 
         if cache is not None and os.path.exists(cache):
-            with open(cache, 'r') as f:
+            with open(cache, 'rb') as f:
                 self.images, self.lengths = pickle.load(f)
         else:
             for idx, (im, categ) in enumerate(
@@ -33,7 +33,7 @@ class VideoFolderDataset(torch.utils.data.Dataset):
                     self.lengths.append(length)
 
             if cache is not None:
-                with open(cache, 'w') as f:
+                with open(cache, 'wb') as f:
                     pickle.dump((self.images, self.lengths), f)
 
         self.cumsum = np.cumsum([0] + self.lengths)

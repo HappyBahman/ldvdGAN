@@ -57,7 +57,7 @@ from trainers import Trainer
 
 import data
 
-from utils import count_parameters
+from util import count_parameters
 
 def build_discriminator(type, **kwargs):
     discriminator_type = getattr(models, type)

@@ -134,7 +134,7 @@ class FactorizedPatchVideoDiscriminator(nn.Module):
         https://arxiv.org/pdf/1912.08860.pdf
     '''
     def __init__(self, n_channels, n_output_neurons=1, bn_use_gamma=True, use_noise=False, noise_sigma=None, ndf=64):
-        super(PatchVideoDiscriminator, self).__init__()
+        super(FactorizedPatchVideoDiscriminator, self).__init__()
 
         self.n_channels = n_channels
         self.n_output_neurons = n_output_neurons
