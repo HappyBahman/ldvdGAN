@@ -28,7 +28,7 @@ Options:
                                     list of available models) [default: PatchImageDiscriminator]
 
     --video_discriminator=<type>    specifies video discriminator type (see models.py for a
-                                    list of available models) [default: CategoricalVideoDiscriminator]
+                                    list of available models) [default: FactorizedPatchVideoDiscriminator]
 
     --video_length=<len>            length of the video [default: 16]
     --print_every=<count>           print every iterations [default: 1]
