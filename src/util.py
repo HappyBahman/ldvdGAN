@@ -57,7 +57,7 @@ def summary(input_size, model):
                     summary[m_key]['trainable'] = True
                 else:
                     summary[m_key]['trainable'] = False
-            if hasattr(module, 'bias'):
+            if hasattr(module, 'bias') and module.bias is not None:
                 params +=  torch.prod(torch.LongTensor(list(module.bias.size())))
             summary[m_key]['nb_params'] = params
 
@@ -74,7 +74,7 @@ def summary(input_size, model):
     else:
         x = Variable(torch.rand(1,*input_size)).type(dtype)
 
-
+    x = x.cuda()
     print(x.shape)
     print(type(x[0]))
     # create properties
@@ -96,7 +96,7 @@ def summary(input_size, model):
     trainable_params = 0
     for layer in summary:
         ## input_shape, output_shape, trainable, nb_params
-        line_new = '{:>20}  {:>25} {:>15}'.format(layer, summary[layer]['output_shape'], summary[layer]['nb_params'])
+        line_new = '{:>20} {:>25} {:>15}'.format(layer, str(summary[layer]['output_shape']), str(summary[layer]['nb_params']))
         total_params += summary[layer]['nb_params']
         if 'trainable' in summary[layer]:
             if summary[layer]['trainable'] == True:

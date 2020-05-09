@@ -118,14 +118,15 @@ if __name__ == "__main__":
                                               n_channels=n_channels, use_noise=args['--use_noise'],
                                               noise_sigma=float(args['--noise_sigma']))
 
-    print('The number of parameters for Video disciminator is : {0}'.format(count_parameters(video_discriminator)))
-    summary((64, 64) ,video_discriminator)
-
-
     if torch.cuda.is_available():
         generator.cuda()
         image_discriminator.cuda()
         video_discriminator.cuda()
+
+
+    print('The number of parameters for Video disciminator is : {0}'.format(count_parameters(video_discriminator)))
+    summary((3,64, 64,  16) ,video_discriminator)
+
 
     trainer = Trainer(image_loader, video_loader,
                       int(args['--print_every']),
