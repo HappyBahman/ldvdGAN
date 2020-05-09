@@ -319,11 +319,11 @@ class VideoGenerator(nn.Module):
 
     def sample_videos(self, num_samples, video_len=None):
         video_len = video_len if video_len is not None else self.video_length
-
+        video_len = int(video_len)
         z, z_category_labels = self.sample_z_video(num_samples, video_len)
 
         h = self.main(z.view(z.size(int(0)), z.size(int(1)), 1, 1))
-        h = h.view(h.size(int(0)) / video_len, video_len, self.n_channels, h.size(int(3)), h.size(int(3)))
+        h = h.view(h.size(int(0)) // video_len, video_len, self.n_channels, h.size(int(3)), h.size(int(3)))
 
         z_category_labels = torch.from_numpy(z_category_labels)
 
