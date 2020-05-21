@@ -43,7 +43,8 @@ class Logger(object):
             # img_summaries.append(tf.Summary.Value(tag='%s/%d' % (tag, i), image=img_sum))
             # Create and write Summary
             with self.writer.as_default():
-                tf.summary.image('%s/%d' % (tag, i), PIL.Image.fromarray(img), step=step)
+                img = tf.expand_dims(img, 0)
+                tf.summary.image('%s/%d' % (tag, i), img, step=step)
                 self.writer.flush()
 
 
@@ -58,26 +59,24 @@ class Logger(object):
         img_summaries = []
         for i, vid in enumerate(videos):
             # Concat a video
-            try:
-                s = StringIO()
-            except:
-                s = BytesIO()
+            # try:
+            #     s = StringIO()
+            # except:
+            #     s = BytesIO()
 
             v = vid.transpose(1, 2, 3, 0)
             v = [np.squeeze(f) for f in np.split(v, v.shape[0], axis=0)]
             img = np.concatenate(v, axis=1)[:, :-1, :]
 
 #            scipy.misc.toimage(img).save(s, format="png")
-            PIL.Image.fromarray(img).save(s, format="png")
-
-            # Create an Image object
-            img_sum = tf.summary.Image(encoded_image_string=s.getvalue(),
-                                       height=img.shape[0],
-                                       width=img.shape[1])
-            # Create a Summary value
-            img_summaries.append(tf.Summary.Value(tag='%s/%d' % (tag, i), image=img_sum))
-
-        # Create and write Summary
-        with self.writer.as_default():
-            tf.summary.scalar(tag, img_summaries.cpu(), step=step)
-            self.writer.flush()
+            # PIL.Image.fromarray(img).save(s, format="png")
+            #
+            # # Create an Image object
+            # img_sum = tf.summary.image(encoded_image_string=s.getvalue(),
+            #                            height=img.shape[0],
+            #                            width=img.shape[1])
+            # # Create a Summary value
+            # Create and write Summary
+            with self.writer.as_default():
+                tf.summary.image('%s/%d' % (tag, i), img, step=step)
+                self.writer.flush()
