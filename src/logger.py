@@ -67,6 +67,7 @@ class Logger(object):
             v = vid.transpose(1, 2, 3, 0)
             v = [np.squeeze(f) for f in np.split(v, v.shape[0], axis=0)]
             img = np.concatenate(v, axis=1)[:, :-1, :]
+            img = tf.expand_dims(img, 0)
 
 #            scipy.misc.toimage(img).save(s, format="png")
             # PIL.Image.fromarray(img).save(s, format="png")

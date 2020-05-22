@@ -1,3 +1,20 @@
+# ldvdGAN: Lower Dimensional Kernels for Video Discriminators
+
+This is the implementation of the paper [Lower Dimensional Kernels for Video Discriminators ](https://arxiv.org/abs/1912.08860) based on [MoCoGAN](https://arxiv.org/abs/1707.04993).
+
+Along adding ldvd models to the code, I have fixed TF2, scipy and python3 compatibility problems but some parts still needs improvement.
+
+To use the Factorized video disciminator in the paper use:
+
+`
+    --video_discriminator FactorizedPatchVideoDiscriminator
+`
+
+option when specifying the video disciminator.
+
+
+the following is `readme.md` from the original repo:
+
 # MoCoGAN: Decomposing Motion and Content for Video Generation
 
 This repository contains an implementation and further details of [MoCoGAN: Decomposing Motion and Content for Video Generation](http://arxiv.org/abs/1707.04993) by Sergey Tulyakov, Ming-Yu Liu, Xiaodong Yang, Jan Kautz.

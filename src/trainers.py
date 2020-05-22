@@ -303,6 +303,8 @@ class Trainer(object):
                 logger.video_summary("Videos", videos_to_numpy(videos), batch_num)
 
                 torch.save(generator, os.path.join(self.log_folder, 'generator_%05d.pytorch' % batch_num))
+                torch.save(image_discriminator, os.path.join(self.log_folder, 'img_disc_%05d.pytorch' % batch_num))
+                torch.save(video_discriminator, os.path.join(self.log_folder, 'vid_disc_%05d.pytorch' % batch_num))
 
             if batch_num >= self.train_batches:
                 torch.save(generator, os.path.join(self.log_folder, 'generator_%05d.pytorch' % batch_num))
