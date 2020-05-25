@@ -24,32 +24,24 @@ import docopt
 import torch
 
 from trainers import videos_to_numpy
+from PIL import Image
 
 import subprocess as sp
 
 
 def save_video(ffmpeg, video, filename):
-    command = [ffmpeg,
-               '-y',
-               '-f', 'rawvideo',
-               '-vcodec', 'rawvideo',
-               '-s', '64x64',
-               '-pix_fmt', 'rgb24',
-               '-r', '8',
-               '-i', '-',
-               '-c:v', 'mjpeg',
-               '-q:v', '3',
-               '-an',
-               filename]
-
-    pipe = sp.Popen(command, stdin=sp.PIPE, stderr=sp.PIPE)
-    pipe.stdin.write(video.tostring())
-
+    images = []
+    for i in range(video.shape[0]):
+        images.append(Image.fromarray(video[i,:,:,:]))
+    #     im.save(filename + str(i))
+    images[0].save(filename, save_all=True, append_images=images[1:],
+        optimize=False, duration=40, loop=0)
 
 if __name__ == "__main__":
     args = docopt.docopt(__doc__)
-
+    device = torch.device("cuda")
     generator = torch.load(args["<model>"], map_location={'cuda:0': 'cpu'})
+    generator.to(device)
     generator.eval()
     num_videos = int(args['--num_videos'])
     output_folder = args['<output_folder>']
@@ -60,4 +52,5 @@ if __name__ == "__main__":
     for i in range(num_videos):
         v, _ = generator.sample_videos(1, int(args['--number_of_frames']))
         video = videos_to_numpy(v).squeeze().transpose((1, 2, 3, 0))
+        # save_video(args["--ffmpeg"], video, os.path.join(output_folder, "{}".format(i)))
         save_video(args["--ffmpeg"], video, os.path.join(output_folder, "{}.{}".format(i, args['--output_format'])))
